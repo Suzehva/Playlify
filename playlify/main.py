@@ -2,7 +2,8 @@ from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
-from spot_search import spot_search
+from spot_search import search_tracks
+from collect_songs import collect_songs
 
 app = Flask(__name__)
 app.secret_key = '???'
@@ -68,16 +69,17 @@ def main():
     if 'access_token' not in session or datetime.now().timestamp() > session['expires_at']:
         return redirect('/')
     
-    # TODO: call playlist_miner, collect list of songs
+    # get songs from playlists from mood
+    playlist_results = collect_songs(session, mood)
+    ret_string += "playlist results: " + str(playlist_results) + "\n"
 
-    spot_api_results = spot_search(session, context)
+    # get songs from context 
+    spot_api_results = search_tracks(session, context, mood)
     ret_string += "spot_api_results: " + str(spot_api_results) + "\n"
 
+    return ret_string #  for testing purposes
 
-    return ret_string
-
-
-    # TODO: make file with common songs
+    # TODO: make file with common songs (if necessary)
 
     # TODO: call chatgpt to make sentence
 

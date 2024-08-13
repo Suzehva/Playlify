@@ -7,14 +7,15 @@ from typing import List
 import requests
 from constants import API_BASE_URL
 
-def spot_search(session, context: str) -> List:
+def search_tracks(session, context: str, mood: str) -> List:
     """
     spot_search uses the spotify API to find songs based on the user's context
 
     Args:
         context: the user's context which will be used to find songs
     
-    Returns: a list of songs found including their URI's
+    Returns: a list of songs found as tuples with the first element a song's 
+    name and the second element a song's uid
 
     Ideas for improvement: 
         - use wildcard % character
@@ -41,6 +42,10 @@ def spot_search(session, context: str) -> List:
     context = context.split()
     context = list(set(context)) # remove duplicates
 
+    mood = mood.split()
+    for word in mood:
+        call_spot(query=word, offset=5, limit=5)
+        
     # call API with individual words
     for word in context:
         call_spot(query=word, offset=5, limit=5)
