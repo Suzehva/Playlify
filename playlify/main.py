@@ -1,17 +1,20 @@
 # TODO: reevaluate if mood and context are really the two things we want to ask the user for (or more e.g. artists)
 # TODO: make sure we don't take too many songs and give LLM a too big input
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
-
-from playlify.direct_songs import collect_API_songs
-from playlify.playlist_songs import collect_playlist_songs
-from playlify.constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
+from direct_songs import collect_API_songs
+from playlist_songs import collect_playlist_songs
+from constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
+from common_words import process_common_words
 from gpt import create_sentence
-import ast
 import re
+import ast
 
 
 app = Flask(__name__)
@@ -79,11 +82,14 @@ def main():
     spot_api_results = collect_API_songs(session, context, mood)
     ret_set.update(spot_api_results)
 
-    # TODO: make file with common songs (if necessary)
+    # add songs from common_words file
+    common_song_set = process_common_words()
+    ret_set.update(common_song_set)
 
-    # TODO: call chatgpt to make sentence
     ret_string = create_sentence(context, ret_set)
 
+
+    # TODO: (laasya) move this code to gpt file (since parsing should be done there)
     split = ret_string.find("[")
     if split != -1:
         sentence = ret_string[:split].strip().strip('"')
