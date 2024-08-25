@@ -5,14 +5,15 @@ from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
-<<<<<<< HEAD
-from spot_search import search_tracks
-from collect_songs import collect_songs
+
 from flask_cors import CORS
-=======
 from direct_songs import collect_API_songs
 from playlist_songs import collect_playlist_songs
->>>>>>> alt_auth
+from direct_songs import collect_API_songs
+from playlist_songs import collect_playlist_songs
+from gpt import create_sentence
+import ast
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -75,14 +76,6 @@ def main():
     if 'access_token' not in session or datetime.now().timestamp() > session['expires_at']:
         return redirect('/')
     
-<<<<<<< HEAD
-    # Simulate collecting songs
-    playlist_results = collect_songs(session, mood)
-    ret_set.update(playlist_results)
-
-    spot_api_results = search_tracks(session, context, mood)
-    ret_set.update(spot_api_results)
-=======
     # get songs from playlists from mood
     playlist_results = collect_playlist_songs(session, mood)
     ret_set.update(playlist_results)
@@ -90,18 +83,18 @@ def main():
     # get songs from context 
     spot_api_results = collect_API_songs(session, context, mood)
     ret_set.update(spot_api_results)
+    ret_string = create_sentence(context, ret_set)
 
-    # turn set into str to query LLM with
->>>>>>> alt_auth
-    ret_string = "context: " + context + "\n"
-    ret_string += "phrases: " + str(ret_set)
-    return ret_string
-
-
-    # TODO: make file with common songs (if necessary)
-
-    # TODO: call chatgpt to make sentence
-
+    split = ret_string.find("[")
+    if split != -1:
+        sentence = ret_string[:split].strip().strip('"')
+        list_part = ret_string[split:].strip()
+        list_part = list_part.replace("'", '"') # for valid JSON format?
+        track_ids = ast.literal_eval(list_part)
+        print(sentence)
+        return sentence
+    else:
+        return ret_string # couldn't generate the playlist
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=False)
