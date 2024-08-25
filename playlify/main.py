@@ -7,18 +7,12 @@ import requests
 import base64
 from direct_songs import collect_API_songs
 from playlist_songs import collect_playlist_songs
+from constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
 
 app = Flask(__name__)
 app.secret_key = '???'
 
 # these three should match with what is on Spotify developer dashboard
-# TODO: (suze) do not just store client id's etc here
-CLIENT_ID = '41434ef91b1144f5a58b9543e6cd6a77'
-CLIENT_SECRET = '190e40fc8d1d4701b4ba9c3f968b78c8'
-REDIRECT_URI = 'http://localhost:5000/callback'
-
-TOKEN_URL = 'https://accounts.spotify.com/api/token' # to refresh token
-
 
 @app.route('/')
 def get_authorized():
