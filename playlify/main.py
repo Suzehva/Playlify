@@ -6,8 +6,10 @@ import requests
 import base64
 from spot_search import search_tracks
 from collect_songs import collect_songs
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = '???'
 
 # these three should match with what is on Spotify developer dashboard
@@ -18,8 +20,6 @@ REDIRECT_URI = 'http://localhost:5000/callback'
 
 TOKEN_URL = 'https://accounts.spotify.com/api/token' # to refresh token
 
-
-@app.route('/')
 def get_authorized():
     # get authorization with spotify set up
     token_data = {
@@ -36,8 +36,6 @@ def get_authorized():
     token_info = response.json()
     session['access_token'] = token_info['access_token']
     session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
-
-    return redirect('/home_page')
 
 @app.route('/home_page')
 def home():
@@ -61,8 +59,9 @@ def home():
 
     '''
 
-@app.route('/main')
+@app.route('/main', methods=['GET'])
 def main():
+    get_authorized()
     ret_set = set()
     context = request.args.get('context')
     mood = request.args.get('mood')
@@ -70,18 +69,16 @@ def main():
     if 'access_token' not in session or datetime.now().timestamp() > session['expires_at']:
         return redirect('/')
     
-    # get songs from playlists from mood
+    # Simulate collecting songs
     playlist_results = collect_songs(session, mood)
     ret_set.update(playlist_results)
 
-    # get songs from context 
     spot_api_results = search_tracks(session, context, mood)
     ret_set.update(spot_api_results)
-
     ret_string = "context: " + context + "\n"
     ret_string += "phrases: " + str(ret_set)
-
     return ret_string
+
 
     # TODO: make file with common songs (if necessary)
 

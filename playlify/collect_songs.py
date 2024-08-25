@@ -3,6 +3,7 @@ from constants import API_BASE_URL
 from typing import Set
 
 def collect_songs(session, mood: str) -> set:
+    print("in collect songs")
     results = set()
     mood = mood.split()
     for word in mood:
