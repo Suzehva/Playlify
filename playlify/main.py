@@ -5,9 +5,14 @@ from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
+
 from playlify.direct_songs import collect_API_songs
 from playlify.playlist_songs import collect_playlist_songs
 from playlify.constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
+from gpt import create_sentence
+import ast
+import re
+
 
 app = Flask(__name__)
 # TODO: get a secret key and understand what it is
@@ -74,16 +79,20 @@ def main():
     spot_api_results = collect_API_songs(session, context, mood)
     ret_set.update(spot_api_results)
 
-    # turn set into str to query LLM with
-    ret_string = "context: " + context + "\n"
-    ret_string += "phrases: " + str(ret_set)
-
-    return ret_string
-
     # TODO: make file with common songs (if necessary)
 
     # TODO: call chatgpt to make sentence
+    ret_string = create_sentence(context, ret_set)
 
+    split = ret_string.find("[")
+    if split != -1:
+        sentence = ret_string[:split].strip().strip('"')
+        list_part = ret_string[split:].strip()
+        list_part = list_part.replace("'", '"') # for valid JSON format?
+        track_ids = ast.literal_eval(list_part)
+        return sentence
+    else:
+        return ret_string # couldn't generate the playlist
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=False)
