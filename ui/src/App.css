@@ -28,6 +28,13 @@
   color: #61dafb;
 }
 
+.mainpage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensures the container takes up full viewport height */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

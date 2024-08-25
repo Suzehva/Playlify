@@ -1,11 +1,17 @@
 import React from 'react';
-import PlayifyForm from './PlayifyForm';
+import { Flex } from '@chakra-ui/react';
+import PlayifyForm from './PlayifyForm'; // Adjust import path as necessary
 
 function App() {
   return (
-    <div>
+    <Flex
+      height="100vh"
+      align="center"
+      justify="center"
+      bg="gray.100" // Optional: background color for better visibility
+    >
       <PlayifyForm />
-    </div>
+    </Flex>
   );
 }
 

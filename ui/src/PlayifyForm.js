@@ -14,7 +14,7 @@ function PlayifyForm() {
   const [context, setContext] = useState('');
   const [mood, setMood] = useState('');
   const toast = useToast();
-  console.log('trying')
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,7 +33,6 @@ function PlayifyForm() {
 
       if (response.ok) {
         const result = await response.text();
-        console.log('Response from Flask:', result);
         toast({
           title: 'Success!',
           description: 'Playlist created successfully.',
@@ -51,7 +50,6 @@ function PlayifyForm() {
         });
       }
     } catch (error) {
-      console.error('Error:', error);
       toast({
         title: 'Error!',
         description: 'An error occurred while creating the playlist.',
@@ -63,30 +61,43 @@ function PlayifyForm() {
   };
 
   return (
-    <Box padding="20px" maxWidth="500px" margin="auto">
+    <Box
+      padding="20px"
+      maxWidth="500px"
+      width="100%"
+      backgroundColor="white"
+      borderRadius="md"
+      boxShadow="md"
+      margin="auto"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+    >
       <Heading as="h2" size="lg" textAlign="center" mb="20px">
         Playify: Create a message hidden in a playlist
       </Heading>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <VStack spacing="20px" align="stretch">
           <FormControl>
-            <FormLabel htmlFor="context">Give us some context!</FormLabel>
+            <FormLabel htmlFor="context" textAlign="center">Give us some context!</FormLabel>
             <Input
               type="text"
               id="context"
               value={context}
               onChange={(e) => setContext(e.target.value)}
               placeholder="I want to propose to my girlfriend"
+              textAlign="center"  // Center the text and placeholder
             />
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="mood">Mood</FormLabel>
+            <FormLabel htmlFor="mood" textAlign="center">Mood</FormLabel>
             <Input
               type="text"
               id="mood"
               value={mood}
               onChange={(e) => setMood(e.target.value)}
               placeholder="love"
+              textAlign="center"  // Center the text and placeholder
             />
           </FormControl>
           <Button
