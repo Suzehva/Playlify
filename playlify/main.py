@@ -5,11 +5,12 @@ from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
-from direct_songs import collect_API_songs
-from playlist_songs import collect_playlist_songs
-from constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
+from playlify.direct_songs import collect_API_songs
+from playlify.playlist_songs import collect_playlist_songs
+from playlify.constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
 
 app = Flask(__name__)
+# TODO: get a secret key and understand what it is
 app.secret_key = '???'
 
 # these three should match with what is on Spotify developer dashboard
