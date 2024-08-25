@@ -1,14 +1,17 @@
 # TODO: reevaluate if mood and context are really the two things we want to ask the user for (or more e.g. artists)
+# TODO: make sure we don't take too many songs and give LLM a too big input
 
 from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
-from spot_search import search_tracks
-from collect_songs import collect_songs
+
+from direct_songs import collect_API_songs
+from playlist_songs import collect_playlist_songs
 from gpt import create_sentence
 import ast
 import re
+
 
 app = Flask(__name__)
 app.secret_key = '???'
@@ -74,11 +77,11 @@ def main():
         return redirect('/')
     
     # get songs from playlists from mood
-    playlist_results = collect_songs(session, mood)
+    playlist_results = collect_playlist_songs(session, mood)
     ret_set.update(playlist_results)
 
     # get songs from context 
-    spot_api_results = search_tracks(session, context, mood)
+    spot_api_results = collect_API_songs(session, context, mood)
     ret_set.update(spot_api_results)
 
     # TODO: make file with common songs (if necessary)
