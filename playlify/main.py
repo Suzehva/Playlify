@@ -1,12 +1,18 @@
 # TODO: reevaluate if mood and context are really the two things we want to ask the user for (or more e.g. artists)
+# TODO: make sure we don't take too many songs and give LLM a too big input
 
 from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
+<<<<<<< HEAD
 from spot_search import search_tracks
 from collect_songs import collect_songs
 from flask_cors import CORS
+=======
+from direct_songs import collect_API_songs
+from playlist_songs import collect_playlist_songs
+>>>>>>> alt_auth
 
 app = Flask(__name__)
 CORS(app)
@@ -69,12 +75,24 @@ def main():
     if 'access_token' not in session or datetime.now().timestamp() > session['expires_at']:
         return redirect('/')
     
+<<<<<<< HEAD
     # Simulate collecting songs
     playlist_results = collect_songs(session, mood)
     ret_set.update(playlist_results)
 
     spot_api_results = search_tracks(session, context, mood)
     ret_set.update(spot_api_results)
+=======
+    # get songs from playlists from mood
+    playlist_results = collect_playlist_songs(session, mood)
+    ret_set.update(playlist_results)
+
+    # get songs from context 
+    spot_api_results = collect_API_songs(session, context, mood)
+    ret_set.update(spot_api_results)
+
+    # turn set into str to query LLM with
+>>>>>>> alt_auth
     ret_string = "context: " + context + "\n"
     ret_string += "phrases: " + str(ret_set)
     return ret_string
