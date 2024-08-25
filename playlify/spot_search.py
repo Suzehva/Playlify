@@ -3,11 +3,11 @@ spot_search uses the Spotify API to turn a user's context into
 songs to be used to form the user's sentence
 """
 
-from typing import List
+from typing import Set
 import requests
 from constants import API_BASE_URL
 
-def search_tracks(session, context: str, mood: str) -> List:
+def search_tracks(session, context: str, mood: str) -> Set:
     """
     spot_search uses the spotify API to find songs based on the user's context
 
@@ -36,9 +36,9 @@ def search_tracks(session, context: str, mood: str) -> List:
         responses_json = responses.json()
         tracks = responses_json['tracks']['items']
         for track in tracks:
-            results.append((track['name'], track['uri']))
+            results.add((track['name'], track['uri']))
 
-    results = []
+    results = set()
     context = context.split()
     context = list(set(context)) # remove duplicates
 

@@ -1,3 +1,5 @@
+# TODO: reevaluate if mood and context are really the two things we want to ask the user for (or more e.g. artists)
+
 from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
@@ -61,9 +63,8 @@ def home():
 
 @app.route('/main')
 def main():
-    ret_string = ""
+    ret_set = set()
     context = request.args.get('context')
-    ret_string += "context: " + context + "\n"
     mood = request.args.get('mood')
 
     if 'access_token' not in session or datetime.now().timestamp() > session['expires_at']:
@@ -71,13 +72,16 @@ def main():
     
     # get songs from playlists from mood
     playlist_results = collect_songs(session, mood)
-    ret_string += "playlist results: " + str(playlist_results) + "\n"
+    ret_set.update(playlist_results)
 
     # get songs from context 
     spot_api_results = search_tracks(session, context, mood)
-    ret_string += "spot_api_results: " + str(spot_api_results) + "\n"
+    ret_set.update(spot_api_results)
 
-    return ret_string #  for testing purposes
+    ret_string = "context: " + context + "\n"
+    ret_string += "phrases: " + str(ret_set)
+
+    return ret_string
 
     # TODO: make file with common songs (if necessary)
 
