@@ -5,9 +5,10 @@ songs to be used to form the user's sentence
 
 from typing import Set
 import requests
-from constants import API_BASE_URL
+from constants import API_BASE_URL, TRACK_AMOUNT, TRACK_INDIVIDUAL_OFFSET, TRACK_COUPLED_OFFSET
+from utils import search_spotify
 
-def search_tracks(session, context: str, mood: str) -> Set:
+def collect_API_songs(session, context: str, mood: str) -> Set:
     """
     spot_search uses the spotify API to find songs based on the user's context
 
@@ -22,36 +23,25 @@ def search_tracks(session, context: str, mood: str) -> Set:
         - play around with limit/offset more
         - TODO: add genre filter to only find songs from user's genre
     """
-    def call_spot(query: str, offset: int, limit: int):
-        headers = {
-            'Authorization': f"Bearer {session['access_token']}"
-        }
-        params = {
-            "q": query,
-            "offset": offset,
-            "type": "track",
-            "limit": limit
-        }
-        responses = requests.get(API_BASE_URL + 'search', headers=headers, params=params)
-        responses_json = responses.json()
-        tracks = responses_json['tracks']['items']
+    def query_and_process(session, query: str, offset: int, limit: int):
+        response = search_spotify(session, query=query, offset=offset, limit=limit, search_type="track")
+        tracks = response['tracks']['items']
         for track in tracks:
             results.add((track['name'], track['uri']))
 
     results = set()
+    
+    # call API with individual words from mood
+    query_and_process(session, query=mood, offset=TRACK_INDIVIDUAL_OFFSET, limit=TRACK_AMOUNT)
+    
+    # call API with individual words from context
     context = context.split()
     context = list(set(context)) # remove duplicates
-
-    mood = mood.split()
-    for word in mood:
-        call_spot(query=word, offset=5, limit=5)
-        
-    # call API with individual words
     for word in context:
-        call_spot(query=word, offset=5, limit=5)
+        query_and_process(session, query=word, offset=TRACK_INDIVIDUAL_OFFSET, limit=TRACK_AMOUNT)
 
-    # try coupling up words
+    # call API with coupled words from context
     for i in range(len(context) - 1):
-        call_spot(query=context[i] + " " + context[i + 1], offset=0, limit=2)
+        query_and_process(session, query=context[i] + " " + context[i + 1], offset=TRACK_COUPLED_OFFSET, limit=TRACK_AMOUNT)
 
     return results
