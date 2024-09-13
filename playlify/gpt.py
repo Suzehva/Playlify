@@ -67,12 +67,13 @@ def create_sentence(context, results):
     task_description += f"{context}. "
     task_description += "Here is a set of tuples where each tuple[0] is the song title and the tuple[1] is the song ID. "
     results = list(results)
+    # TODO: do not only task top 75 results, because now it doesn't use any of the context words and 
+    # keeps returning "Couldn't generate playlist. Try modifying context or mood."
     task_description += f"{results[:75]}. "
     task_description += '''
         Do NOT use any other words. Do NOT break up any words/phrases used. If you can't construct a sentence
         using ONLY the song titles we provide, try again. Otherwise, return "Couldn't generate playlist. Try modifying context or mood."
     '''
-
     response = client.chat.completions.create(
         model = "gpt-3.5-turbo",
         messages = [

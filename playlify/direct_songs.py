@@ -4,9 +4,8 @@ songs to be used to form the user's sentence
 """
 
 from typing import Set
-import requests
-from constants import API_BASE_URL, TRACK_AMOUNT, TRACK_INDIVIDUAL_OFFSET, TRACK_COUPLED_OFFSET
-from utils import search_spotify
+from .constants import API_BASE_URL, TRACK_AMOUNT, TRACK_INDIVIDUAL_OFFSET, TRACK_COUPLED_OFFSET
+from .utils import search_spotify
 
 def collect_API_songs(session, context: str, mood: str) -> Set:
     """

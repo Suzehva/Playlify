@@ -4,8 +4,8 @@ from playlists gathered by the user's input mood
 """
 import requests
 from typing import Set
-from utils import search_spotify
-from constants import PLAYLIST_AMOUNT, PLAYLIST_OFFSET
+from .utils import search_spotify
+from .constants import PLAYLIST_AMOUNT, PLAYLIST_OFFSET
 
 
 def collect_playlist_songs(session, mood: str) -> Set:

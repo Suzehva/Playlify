@@ -1,29 +1,31 @@
+# HOW TO USE
+# 2. navigate to the parent directory of playlify
+# 2. run with: python -m playlify.main
+
 # TODO: reevaluate if mood and context are really the two things we want to ask the user for (or more e.g. artists)
 # TODO: make sure we don't take too many songs and give LLM a too big input
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
-
-from direct_songs import collect_API_songs
-from playlist_songs import collect_playlist_songs
-from gpt import create_sentence
-import ast
+from .direct_songs import collect_API_songs
+from .playlist_songs import collect_playlist_songs
+from .constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
+from .common_words import process_common_words
+from .gpt import create_sentence
 import re
+import ast
 
 
 app = Flask(__name__)
+# TODO: get a secret key and understand what it is
 app.secret_key = '???'
 
 # these three should match with what is on Spotify developer dashboard
-# TODO: (suze) do not just store client id's etc here
-CLIENT_ID = '41434ef91b1144f5a58b9543e6cd6a77'
-CLIENT_SECRET = '190e40fc8d1d4701b4ba9c3f968b78c8'
-REDIRECT_URI = 'http://localhost:5000/callback'
-
-TOKEN_URL = 'https://accounts.spotify.com/api/token' # to refresh token
-
 
 @app.route('/')
 def get_authorized():
@@ -84,11 +86,14 @@ def main():
     spot_api_results = collect_API_songs(session, context, mood)
     ret_set.update(spot_api_results)
 
-    # TODO: make file with common songs (if necessary)
+    # add songs from common_words file
+    common_song_set = process_common_words()
+    ret_set.update(common_song_set)
 
-    # TODO: call chatgpt to make sentence
     ret_string = create_sentence(context, ret_set)
 
+    
+    # TODO: (laasya) move this code to gpt file (since parsing should be done there)
     split = ret_string.find("[")
     if split != -1:
         sentence = ret_string[:split].strip().strip('"')

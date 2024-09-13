@@ -2,3 +2,6 @@ datetime
 flask
 requests
 typing
+openai
+python-dotenv
+ast
