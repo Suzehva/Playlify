@@ -2,7 +2,7 @@ from typing import Set
 
 def process_common_words() -> Set:
     results = set()
-    file_path = 'common_words.txt'
+    file_path = 'playlify/common_words.txt'
     with open(file_path, 'r') as file:
         for line in file:
             line.strip()

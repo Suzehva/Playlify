@@ -1,6 +1,6 @@
 import requests
 from typing import Dict
-from constants import API_BASE_URL
+from .constants import API_BASE_URL
 
 def search_spotify(session, query: str, offset: int, limit: int, search_type: str) -> Dict:
         headers = {

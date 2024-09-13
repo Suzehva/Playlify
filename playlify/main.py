@@ -1,3 +1,5 @@
+# run with: python -m playlify.main
+
 # TODO: reevaluate if mood and context are really the two things we want to ask the user for (or more e.g. artists)
 # TODO: make sure we don't take too many songs and give LLM a too big input
 import sys
@@ -8,11 +10,11 @@ from datetime import datetime
 from flask import Flask, redirect, request, session
 import requests
 import base64
-from direct_songs import collect_API_songs
-from playlist_songs import collect_playlist_songs
-from constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
-from common_words import process_common_words
-from gpt import create_sentence
+from .direct_songs import collect_API_songs
+from .playlist_songs import collect_playlist_songs
+from .constants import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
+from .common_words import process_common_words
+from .gpt import create_sentence
 import re
 import ast
 
@@ -88,7 +90,7 @@ def main():
 
     ret_string = create_sentence(context, ret_set)
 
-
+    
     # TODO: (laasya) move this code to gpt file (since parsing should be done there)
     split = ret_string.find("[")
     if split != -1:
