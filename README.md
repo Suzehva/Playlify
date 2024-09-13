@@ -6,7 +6,7 @@ To manage dependencies, we recommend using a Python venv. First, ensure that you
 
 Then, set up a venv and install the required dependencies using pip within the environment.
 ```bash
-cd evaluate/
+cd playlify/
 python3 -m venv env
 source env/bin/activate
 pip install --upgrade pip
