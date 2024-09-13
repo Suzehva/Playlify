@@ -4,7 +4,7 @@ songs with those names to a file output_songs.
 
 Usage: 
     1. put a list of songs you want to process in input_songs.txt (only the name). 
-    2. run python uri_finder.py (make sure you're in the directory with this file)
+    2. run python uri_finder.py (make sure you're in the directory uri_finder)
     3. get the songs and uri's from the output_songs.txt file and add them to common_words.txt
 """
 import sys

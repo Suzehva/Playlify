@@ -1,4 +1,6 @@
-# run with: python -m playlify.main
+# HOW TO USE
+# 2. navigate to the parent directory of playlify
+# 2. run with: python -m playlify.main
 
 # TODO: reevaluate if mood and context are really the two things we want to ask the user for (or more e.g. artists)
 # TODO: make sure we don't take too many songs and give LLM a too big input
