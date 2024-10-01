@@ -1,6 +1,8 @@
 # Playlify
 Playlify creates a playlist with a hidden message: the titles of all the songs in the playlist form a sentence.
 
+Playlify is a work in progress!
+
 # Setup
 To manage dependencies, we recommend using a Python venv. First, ensure that you have Python installed (see https://cloud.google.com/python/docs/setup).
 
