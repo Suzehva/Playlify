@@ -1,8 +1,8 @@
 API_BASE_URL = 'https://api.spotify.com/v1/'
 
 # TODO: probably shouldn't store client ID's etc out in the open
-CLIENT_ID = '41434ef91b1144f5a58b9543e6cd6a77'
-CLIENT_SECRET = '190e40fc8d1d4701b4ba9c3f968b78c8'
+CLIENT_ID = '???'
+CLIENT_SECRET = '???'
 TOKEN_URL = 'https://accounts.spotify.com/api/token' # to refresh token
 
 # the amount of playlist we process based on the mood
